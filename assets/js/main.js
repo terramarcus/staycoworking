@@ -711,14 +711,12 @@
 
   /* -------------------------------------------------------
      11) COOKIES — LGPD (Lei nº 13.709/2018)
-     Nenhum cookie não essencial (ex.: Google Tag Manager) é
-     carregado antes do usuário decidir. A escolha fica salva
-     no localStorage e pode ser revista a qualquer momento pelo
-     link "Preferências de cookies", injetado no rodapé.
+     O Google Tag Manager carrega direto no <head> de todas as
+     páginas (não depende mais do consentimento). Este bloco
+     mantém a preferência do usuário salva no localStorage e o
+     link "Preferências de cookies" no rodapé.
      ------------------------------------------------------- */
   var COOKIE_KEY = 'stay.cookieConsent';
-  var GTM_ID = 'GTM-WR3MW7B';
-  var gtmCarregado = false;
 
   function lerConsentimento() {
     try {
@@ -731,22 +729,7 @@
     try { localStorage.setItem(COOKIE_KEY, JSON.stringify(c)); } catch (e) { /* modo privado */ }
   }
 
-  /** Bootstrap oficial do GTM, só é chamado depois do consentimento. */
-  function carregarGTM() {
-    if (gtmCarregado) return;
-    gtmCarregado = true;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-    var f = document.getElementsByTagName('script')[0];
-    var j = document.createElement('script');
-    j.async = true;
-    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + GTM_ID;
-    f.parentNode.insertBefore(j, f);
-  }
-
-  function aplicarConsentimento(c) {
-    if (c && c.analytics) carregarGTM();
-  }
+  function aplicarConsentimento(c) {}
 
   function initCookieConsent() {
     var salvo = lerConsentimento();
